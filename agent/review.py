@@ -25,7 +25,7 @@ def review_pull_request(
     pr_number: int,
     vault_project_file: str,
     vault_claude_md: str,
-) -> str:
+    ) -> str:
     """
     Full pipeline: read vault + read PR + ask Claude + post comment.
 
@@ -47,32 +47,32 @@ def review_pull_request(
 
     # Step 3 — build the prompt for Claude
     system_prompt = f"""You are a code reviewer for a software project.
-You have been given the project conventions and rules, and you must 
-review code strictly against them.
+    You have been given the project conventions and rules, and you must 
+    review code strictly against them.
 
-Be specific. Reference line numbers or function names when pointing 
-out issues. Do not invent problems that are not there.
+    Be specific. Reference line numbers or function names when pointing 
+    out issues. Do not invent problems that are not there.
 
-If the code follows the conventions well, say so clearly.
+    If the code follows the conventions well, say so clearly.
 
-Format your review in clean markdown suitable for a GitHub comment.
-Start with a one-line summary, then list any issues, then list what 
-was done well.
+    Format your review in clean markdown suitable for a GitHub comment.
+    Start with a one-line summary, then list any issues, then list what 
+    was done well.
 
---- PROJECT RULES (from CLAUDE.md) ---
-{rules}
+    --- PROJECT RULES (from CLAUDE.md) ---
+    {rules}
 
---- PROJECT CONTEXT ---
-{project_context}
-"""
+    --- PROJECT CONTEXT ---
+    {project_context}
+    """
 
     user_message = f"""Please review this pull request.
 
-{pr_description}
+    {pr_description}
 
---- CODE CHANGES ---
-{pr_diff}
-"""
+    --- CODE CHANGES ---
+    {pr_diff}
+    """
 
     # Step 4 — ask Claude
     print("Asking Claude to review...")
@@ -87,7 +87,7 @@ was done well.
 
 # Run manually for testing
 if __name__ == "__main__":
-        import sys
+    import sys
 
     repo = os.environ.get("REPO_NAME", "NuriaOlivares/claude-agent")
     pr_number = int(os.environ.get("PR_NUMBER", "1"))
