@@ -87,18 +87,24 @@ was done well.
 
 # Run manually for testing
 if __name__ == "__main__":
-    REPO = "NuriaOlivares/claude-agent"
-    PR_NUMBER = 1
+        import sys
 
-    # Update these paths to match your Mac username
-    VAULT_PROJECT = os.path.expanduser("~/documents/projects/my-vault/30_projects/claude-agent.md")
-    VAULT_RULES = os.path.expanduser("~/documents/projects/my-vault/CLAUDE.md")
+    repo = os.environ.get("REPO_NAME", "NuriaOlivares/claude-agent")
+    pr_number = int(os.environ.get("PR_NUMBER", "1"))
+
+    vault_base = os.environ.get(
+        "VAULT_PATH",
+        os.path.expanduser("~/documents/projects/my-vault")
+    )
+
+    vault_project = os.path.join(vault_base, "30_projects", "claude-agent.md")
+    vault_rules = os.path.join(vault_base, "CLAUDE.md")
 
     review = review_pull_request(
-        repo_name=REPO,
-        pr_number=PR_NUMBER,
-        vault_project_file=VAULT_PROJECT,
-        vault_claude_md=VAULT_RULES,
+        repo_name=repo,
+        pr_number=pr_number,
+        vault_project_file=vault_project,
+        vault_claude_md=vault_rules,
     )
 
     print("\n=== Review posted ===")
