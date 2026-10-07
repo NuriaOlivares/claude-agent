@@ -19,7 +19,7 @@ def read_vault_file(file_path: str) -> str:
     """Read a file from the vault."""
     if not os.path.exists(file_path):
         return f"File not found: {file_path}"
-    with open(file_path, "r") as f:
+    with open(file_path , "r") as f:
         return f.read()
 
 
