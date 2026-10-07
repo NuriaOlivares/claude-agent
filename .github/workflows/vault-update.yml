@@ -1,0 +1,52 @@
+name: Vault Update on Merge
+
+# Trigger: only when a PR is merged into main
+# (not just closed — merged is a specific condition)
+on:
+  pull_request:
+    types: [closed]
+    branches: [main]
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  update-vault:
+    name: Update vault with merged changes
+    # This condition is critical — only run if the PR was actually merged
+    # not just closed without merging
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout agent code
+        uses: actions/checkout@v4
+        with:
+          path: claude-agent
+
+      - name: Checkout vault
+        uses: actions/checkout@v4
+        with:
+          repository: NuriaOlivares/my-vault
+          token: ${{ secrets.VAULT_TOKEN }}
+          path: my-vault
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r claude-agent/requirements.txt
+
+      - name: Run vault update
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GITHUB_TOKEN: ${{ secrets.VAULT_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          REPO_NAME: ${{ github.repository }}
+          VAULT_REPO: NuriaOlivares/my-vault
+          VAULT_FILE: 30_projects/claude-agent.md
+          VAULT_PATH: ${{ github.workspace }}/my-vault
+        run: python claude-agent/agent/vault_update.py
